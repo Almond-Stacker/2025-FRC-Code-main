@@ -8,8 +8,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
+import java.util.ArrayList;
+
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -109,16 +113,41 @@ public class Swerve extends SubsystemBase {
         return Rotation2d.fromDegrees(gyro.getYaw().getValue());
     }
 
-    public void resetModulesToAbsolute(){
+    public void resetModulesToAbsolute() {
         for(SwerveModule mod : mSwerveMods){
             mod.resetToAbsolute();
         }
+    }
+
+    //init getter methods 
+    public ArrayList<TalonFX> getDriveMotors() {
+        ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
+        for(SwerveModule x: mSwerveMods) {
+            motors.add(x.getDriveMotor());
+        }
+        return motors;
+    }
+    public ArrayList<TalonFX> getAngleMotors() {
+        ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
+        for(SwerveModule x: mSwerveMods) {
+            motors.add(x.getAngleMotor());
+        }
+        return motors;
+    }
+
+    public ArrayList<CANcoder> getEncoders() {
+        ArrayList<CANcoder> encoders = new ArrayList<CANcoder>();
+        for(SwerveModule x: mSwerveMods) {
+            encoders.add(x.getObjectCANcoder());
+        }
+        return encoders;
     }
 
     @Override
     public void periodic(){
         swerveOdometry.update(getGyroYaw(), getModulePositions());
 
+        // place encoder data on smartdashboard
         for(SwerveModule mod : mSwerveMods){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
