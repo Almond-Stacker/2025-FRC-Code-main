@@ -131,6 +131,8 @@ public final class Constants {
         }
 
         public static final boolean testMode = false;
+        public static final boolean sigma = true;
+        public static final boolean coldinhere = true;
     }
 
     public static final class AutoConstants { //TODO: The below constants are used in the example auto, and must be tuned to specific robot
