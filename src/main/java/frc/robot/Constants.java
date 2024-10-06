@@ -6,6 +6,7 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -153,12 +154,13 @@ public final class Constants {
 
     public static final class CameraConstants
     {
-        public static final int earthInfo = 6370;
-        public static final String cameraName = "";
-        public static final Pose3d cameraToRobot = new Pose3d();
-        //Not sure if needed and if so not sure how to get it 
-        public static final double LHA = 0;
-        public static final double robotLatitude = Math.abs(cameraToRobot.getZ() / earthInfo);
+        public static final class camera1 {
+            public static final String cameraName = "INSERT LATER";
+            public static final int targetID = 0;
+            public static final double cameraHightOffGround = 0;
+            public static final double targetHighoffGround = 0; 
+            public static final double cameraPitch = 0; 
+        }
     }
 
 }
