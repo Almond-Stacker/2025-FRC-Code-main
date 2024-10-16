@@ -154,13 +154,7 @@ public final class Constants {
 
     public static final class CameraConstants
     {
-        public static final class camera1 {
-            public static final String cameraName = "INSERT LATER";
-            public static final int targetID = 0;
-            public static final double cameraHightOffGround = 0;
-            public static final double targetHighoffGround = 0; 
-            public static final double cameraPitch = 0; 
-        }
+        
     }
 
 }

@@ -4,7 +4,9 @@ package frc.robot.subsystems;
 import java.util.List;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonTargetSortMode;
 import org.photonvision.PhotonUtils;
+import org.photonvision.proto.Photon;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -18,8 +20,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.geometry.Pose2d;
 
 import frc.robot.Constants.CameraConstants;
-import frc.robot.Constants.CameraConstants.camera1;
 import frc.robot.SwerveModule;
+import frc.robot.PhotonConfig;
 
 public class PhotonVision extends SubsystemBase{
     PhotonCamera camera;
@@ -27,67 +29,40 @@ public class PhotonVision extends SubsystemBase{
     PhotonTrackedTarget target;
 
     Transform3d targetLocation; 
-    
-    boolean bestTarget;
-    int targetID;
-    double targetYaw = 0.0;
-    double targetRange = 0.0;
+    PhotonConfig configuration;
+
+    double targetRange;
+    double targetYaw;
+    boolean targetSeen;
 
     //test commit big balls
 
-    public PhotonVision(String cameraName, boolean bestTarget, int targetID) {
-        this.camera = new PhotonCamera(cameraName);
-        this.bestTarget = bestTarget;
-        this.targetID = targetID;
+    public PhotonVision(PhotonConfig configuration) {
+        this.configuration = configuration;
+        camera = new PhotonCamera(configuration.cameraName);
     }
 
     @Override 
     public void periodic(){
         lastestDetection = camera.getLatestResult();
-        // check for detected target to ensure null object is not accessed 
         if(lastestDetection != null) {
-            // look for target depending on determination of which one you want
-            if(bestTarget) { 
-                target = lastestDetection.getBestTarget();
-            } else {
-                target = lastestDetection.getTargets().get(0);
+            for(PhotonTrackedTarget x: lastestDetection.getTargets()) {
+                if(x.getFiducialId() == configuration.targetID) {
+                    targetYaw = x.getYaw();
+                    targetRange = PhotonUtils.calculateDistanceToTargetMeters( 
+                        configuration.cameraHeightOffGround, 
+                        configuration.targetHeightOffGround, 
+                        Units.degreesToRadians(configuration.cameraPitch), 
+                        Units.degreesToRadians(x.getPitch()));
+                        targetSeen = true;
+                        break;
+                }
+                targetSeen = false;
             }
-            
-            // check for correct detection of target 
-            if(target.getFiducialId() == targetID) {
-                whenTargetSeen(target);
-            } else {
-                target = null;
-            }
-        } else {
-            // destroy values to ensure false values aren't used 
-            whenTargetNotSeen();
+        }
+        else {
+            targetSeen = false;
         }
     }
 
-    // calculate information about target 
-    public void whenTargetSeen(PhotonTrackedTarget target) {
-        targetYaw = target.getYaw();
-        targetRange = PhotonUtils.calculateDistanceToTargetMeters(
-            camera1.cameraHightOffGround, 
-            camera1.targetHighoffGround, 
-            Units.degreesToRadians(camera1.cameraPitch),
-            Units.degreesToRadians(target.getPitch()));
-    }
-
-    // return information calculated 
-    public double[] getTargetInformation() {
-        double[] info = {targetYaw, targetRange};
-        return info;
-    }
-
-    public void whenTargetNotSeen() {
-        targetYaw = -1000;
-        targetRange = -1000; 
-    }
-
-    //TODO abstract smart dash board stuff 
-    public void dataToSmartdashboard() {
-
-    }
 }
