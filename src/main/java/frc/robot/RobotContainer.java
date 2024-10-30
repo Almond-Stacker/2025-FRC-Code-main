@@ -35,6 +35,7 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
+    private final SysIDTest testingSwerve = new SysIDTest(s_Swerve);
    // private final SysIDTest testingSwerve = new SysIDTest(s_Swerve);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -61,14 +62,14 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        configureTestBindings();
+        //configureTestBindings();
     }
 
     private void configureTestBindings() {
-        // driver2.a().onTrue(testingSwerve.sysIdDynamic(SysIdRoutine.Direction.kForward));
-        // driver2.b().onTrue(testingSwerve.sysIdDynamic(SysIdRoutine.Direction.kForward));
-        // driver2.x().onTrue(testingSwerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        // driver2.y().onTrue(testingSwerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        driver2.a().onTrue(testingSwerve.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        driver2.b().onTrue(testingSwerve.sysIdDynamic(SysIdRoutine.Direction.kForward));
+        driver2.x().onTrue(testingSwerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+        driver2.y().onTrue(testingSwerve.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     }
 
     /**
