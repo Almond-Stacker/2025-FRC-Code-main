@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
+import frc.robot.commands.PhotonVisionCmds.RotateMove;
 import frc.robot.subsystems.*;
 //import frc.robot.subsystems.SysIDTest;
 
@@ -39,7 +40,11 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final SysIDTest testingSwerve = new SysIDTest(s_Swerve);
+    private final PhotonVision camera1 = new PhotonVision(null);
    // private final SysIDTest testingSwerve = new SysIDTest(s_Swerve);
+
+   //Commands
+   private final RotateMove c_DriveToTag = new RotateMove(null,null,null,null,null);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
