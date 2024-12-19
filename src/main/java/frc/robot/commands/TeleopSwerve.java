@@ -17,8 +17,9 @@ public class TeleopSwerve extends Command {
     private DoubleSupplier strafeSup;
     private DoubleSupplier rotationSup;
     private BooleanSupplier robotCentricSup;
-    private double translationVel;
-    private double strafeVel;
+    private double translationVal;
+    private double strafeVal;
+    private double rotationVal;
 
     public TeleopSwerve(Swerve s_Swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier robotCentricSup) {
         this.s_Swerve = s_Swerve;
@@ -33,18 +34,14 @@ public class TeleopSwerve extends Command {
     @Override
     public void execute() {
         /* Get Values, Deadband*/
-        double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.stickDeadband);
-        double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.stickDeadband);
-
-        translationVel = Math.max(-1, Math.min(1, translationVel + (translationVal * 0.1)));
-        strafeVel = Math.max(-1, Math.min(1, strafeVel + (strafeVal * 0.1)));
-
-        double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
+        translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.stickDeadband);
+        strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.stickDeadband);
+        rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
 
         /* Drive */
         s_Swerve.drive(
-            new Translation2d(translationVel, strafeVel).times(Constants.Swerve.maxSpeed), 
-            rotationVal * Constants.Swerve.maxAngularVelocity, 
+            new Translation2d(translationVal, strafeVal).times(Constants.Swerve.MAX_SPEED), 
+            rotationVal * Constants.Swerve.MAX_ANGULAR_VELOCITY, 
             !robotCentricSup.getAsBoolean(), 
             true
         );
