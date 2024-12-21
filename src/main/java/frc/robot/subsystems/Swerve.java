@@ -41,6 +41,7 @@ public class Swerve extends SubsystemBase {
         };
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.SWERVE_DRIVE_KINEMATICS, getGyroYaw(), getModulePositions());
+        resetModulesToAbsolute();
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -119,34 +120,9 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    //init getter methods 
-    public ArrayList<TalonFX> getDriveMotors() {
-        ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
-        for(SwerveModule x: mSwerveMods) {
-            motors.add(x.getDriveMotor());
-        }
-        return motors;
-    }
-    public ArrayList<TalonFX> getAngleMotors() {
-        ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
-        for(SwerveModule x: mSwerveMods) {
-            motors.add(x.getAngleMotor());
-        }
-        return motors;
-    }
-
-    public ArrayList<CANcoder> getEncoders() {
-        ArrayList<CANcoder> encoders = new ArrayList<CANcoder>();
-        for(SwerveModule x: mSwerveMods) {
-            encoders.add(x.getObjectCANcoder());
-        }
-        return encoders;
-    }
-
     @Override
     public void periodic(){
         swerveOdometry.update(getGyroYaw(), getModulePositions());
-
 
         // place encoder data on smartdashboard
         for(SwerveModule mod : mSwerveMods){
